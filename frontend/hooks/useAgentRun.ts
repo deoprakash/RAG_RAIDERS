@@ -42,8 +42,12 @@ export function useAgentRun() {
 
       if (timerRef.current) clearInterval(timerRef.current);
       store.setResults(results);
-    } catch {
-      store.appendLog({ time: getLogTime(), message: '❌ Backend request failed' });
+    } catch (error) {
+      const message = axios.isAxiosError(error)
+        ? (error.response?.data?.message as string | undefined) ?? error.message
+        : 'Backend request failed';
+
+      store.appendLog({ time: getLogTime(), message: `❌ ${message}` });
       if (timerRef.current) clearInterval(timerRef.current);
       store.setStatus('error');
     }

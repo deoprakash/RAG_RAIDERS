@@ -1,9 +1,17 @@
 export const toBranchName = (team: string, leader: string): string => {
   if (!team && !leader) return '';
-  return `${team}_${leader}_AI_Fix`
-    .toUpperCase()
-    .replace(/\s+/g, '_')
-    .replace(/[^A-Z0-9_]/g, '');
+  const normalize = (value: string) =>
+    value
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^A-Z0-9_]/g, '')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '');
+
+  const safeTeam = normalize(team);
+  const safeLeader = normalize(leader);
+  return `${safeTeam}_${safeLeader}_AI_Fix`;
 };
 
 export const formatDuration = (seconds: number): string => {

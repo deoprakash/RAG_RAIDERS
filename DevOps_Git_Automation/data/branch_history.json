@@ -106,5 +106,122 @@
     "description": "Auto run for ALPHA / shubham dubey",
     "created_by": "backend_coordinator",
     "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_DEO_PRAKASH_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-19T19:35:47.423658",
+    "issue_id": "N/A",
+    "description": "Auto run for RAG RAIDERS / DEO PRAKASH",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_DEO_PRAKASH_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-19T19:41:18.019211",
+    "issue_id": "N/A",
+    "description": "Auto run for RAG RAIDERS / DEO PRAKASH",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "deo_prakash_ssipmt_com_deo_prakash_ssipmt_com_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T02:19:12.228208",
+    "issue_id": "N/A",
+    "description": "Auto run for deo.prakash@ssipmt.com / deo.prakash@ssipmt.com",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "love_shubhm_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T02:45:46.510730",
+    "issue_id": "N/A",
+    "description": "Auto run for love / shubhm",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_Deo_Prakash_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T02:49:41.845886",
+    "issue_id": "N/A",
+    "description": "Auto run for RAG RAIDERS / Deo Prakash",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "rag_deo_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T02:55:36.899664",
+    "issue_id": "N/A",
+    "description": "Auto run for rag / deo",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "grid_seven_shubham_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:23:17.213258",
+    "issue_id": "N/A",
+    "description": "Auto run for grid seven / shubham",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "grid_seven_shubham_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:23:27.142783",
+    "issue_id": "N/A",
+    "description": "Auto run for grid seven / shubham",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "grid_seven_shubham_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:24:02.598985",
+    "issue_id": "N/A",
+    "description": "Auto run for grid seven / shubham",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "grid_seven_shubham_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:25:40.870138",
+    "issue_id": "N/A",
+    "description": "Auto run for grid seven / shubham",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_DEO_PRAKASH_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:39:42.625507",
+    "issue_id": "N/A",
+    "description": "Auto run for Rag Raiders / Deo Prakash",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_DEO_PRAKASH_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:43:06.091399",
+    "issue_id": "N/A",
+    "description": "Auto run for Rag Raiders / Deo Prakash",
+    "created_by": "backend_coordinator",
+    "status": "created"
+  },
+  {
+    "branch_name": "RAG_RAIDERS_DEO_PRAKASH_AI_Fix",
+    "type": "fix",
+    "timestamp": "2026-02-20T04:47:25.410524",
+    "issue_id": "N/A",
+    "description": "Auto run for Rag Raiders / Deo Prakash",
+    "created_by": "backend_coordinator",
+    "status": "created"
   }
 ]

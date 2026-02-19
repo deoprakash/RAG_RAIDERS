@@ -18,6 +18,8 @@ const bugTypeColors: Record<BugType, string> = {
 
 export default function FixesTable({ fixes }: FixesTableProps) {
   const exportCSV = () => {
+    if (fixes.length === 0) return;
+
     const headers = ['File', 'Bug Type', 'Line #', 'Commit Message', 'Status'];
     const rows = fixes.map((fix) => [
       fix.file,
@@ -48,6 +50,7 @@ export default function FixesTable({ fixes }: FixesTableProps) {
         <h2 className="text-2xl font-bold text-[#F9FAFB]">Fixes Applied</h2>
         <button
           onClick={exportCSV}
+          disabled={fixes.length === 0}
           className="flex items-center gap-2 bg-[#1A2235] hover:bg-[#1E2D45] border border-[#1E2D45] rounded-lg px-4 py-2 text-sm text-[#F9FAFB] transition-colors"
         >
           <Download className="w-4 h-4" />
@@ -78,7 +81,13 @@ export default function FixesTable({ fixes }: FixesTableProps) {
             </tr>
           </thead>
           <tbody>
-            {fixes.map((fix, index) => (
+            {fixes.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-6 text-center text-[#9CA3AF] text-sm">
+                  No fixes were applied in this run.
+                </td>
+              </tr>
+            ) : fixes.map((fix, index) => (
               <motion.tr
                 key={index}
                 initial={{ opacity: 0, y: 10 }}

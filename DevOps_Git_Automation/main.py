@@ -45,7 +45,7 @@ def run_git_automation_demo():
     banner("Phase 1: Git Automation (First 4 Hours)")
     
     try:
-        from branch_manager import BranchManager
+        from scripts.branch_manager import BranchManager
         
         logger.info("Initializing Branch Manager...")
         manager = BranchManager()
@@ -53,15 +53,15 @@ def run_git_automation_demo():
         # Generate and SAVE example branches
         logger.info("\nGenerating TEAM_LEADER_AI_Fix branches:")
         examples = [
-            ("bug", "101", "fix_authentication"),
-            ("feature", "102", "add_analytics"),
-            ("hotfix", "103", "security_patch"),
-            ("fix", None, "performance_optimization")
+            ("RIFT ORGANISERS", "Saiyam Kumar"),
+            ("RAG RAIDERS", "Deo Prakash"),
+            ("CODE WARRIORS", "Arya Singh"),
+            ("ALPHA TEAM", "Team Lead")
         ]
         
         created_branches = []
-        for issue_type, issue_id, description in examples:
-            branch_entry = manager.create_branch_entry(issue_type, issue_id, description)
+        for team_name, leader_name in examples:
+            branch_entry = manager.create_branch_entry(team_name, leader_name)
             created_branches.append(branch_entry)
             print(f"  [OK] {branch_entry['branch_name']}")
         
@@ -78,8 +78,8 @@ def run_ci_pipeline_demo():
     banner("Phase 2: CI/CD Pipeline (Next 4 Hours)")
     
     try:
-        from ci_runner import CIRunner
-        from iteration_tracker import IterationTracker
+        from ci_cd.pipeline.ci_runner import CIRunner
+        from ci_cd.tracker.iteration_tracker import IterationTracker
         
         logger.info("Initializing CI Pipeline...")
         # Force simulation mode for production-ready testing
@@ -111,7 +111,7 @@ def run_deployment_demo():
     banner("Phase 3: Deployment (Final Hours)")
     
     try:
-        from deploy import DeploymentManager
+        from deployment.deploy import DeploymentManager
         
         logger.info("Initializing Deployment Manager...")
         manager = DeploymentManager()

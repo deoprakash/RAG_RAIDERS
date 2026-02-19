@@ -1,68 +1,83 @@
 {
   "project": "RIFT'26 - DevOps Lead",
-  "start_time": "2026-02-19T13:32:31.631206+00:00",
-  "end_time": "2026-02-19T13:32:53.943526+00:00",
-  "total_iterations": 4,
+  "start_time": "2026-02-19T23:16:31.596247+00:00",
+  "end_time": "2026-02-19T23:17:25.406888+00:00",
+  "total_iterations": 5,
   "pipeline_history": [
     {
       "iteration": 1,
-      "start_time": "2026-02-19T13:32:31.631206+00:00",
+      "start_time": "2026-02-19T23:16:31.596247+00:00",
       "mode": "backend",
       "stages": {
         "test": {
           "passed": false,
-          "timestamp": "2026-02-19T13:32:31.631206+00:00",
+          "timestamp": "2026-02-19T23:16:31.596247+00:00",
           "simulated": false
         }
       },
       "duration": 0,
       "status": "failed",
-      "end_time": "2026-02-19T13:32:31.631206+00:00"
+      "end_time": "2026-02-19T23:16:31.596247+00:00"
     },
     {
       "iteration": 2,
-      "start_time": "2026-02-19T13:32:31.633205+00:00",
-      "mode": "backend",
-      "stages": {
-        "test": {
-          "passed": true,
-          "timestamp": "2026-02-19T13:32:31.633205+00:00",
-          "simulated": false
-        }
-      },
-      "duration": 0,
-      "status": "passed",
-      "end_time": "2026-02-19T13:32:31.633205+00:00"
-    },
-    {
-      "iteration": 1,
-      "start_time": "2026-02-19T13:32:53.941756+00:00",
+      "start_time": "2026-02-19T23:16:45.256877+00:00",
       "mode": "backend",
       "stages": {
         "test": {
           "passed": false,
-          "timestamp": "2026-02-19T13:32:53.941756+00:00",
+          "timestamp": "2026-02-19T23:16:45.256877+00:00",
           "simulated": false
         }
       },
       "duration": 0,
       "status": "failed",
-      "end_time": "2026-02-19T13:32:53.941756+00:00"
+      "end_time": "2026-02-19T23:16:45.256877+00:00"
     },
     {
-      "iteration": 4,
-      "start_time": "2026-02-19T13:32:53.943526+00:00",
+      "iteration": 3,
+      "start_time": "2026-02-19T23:16:58.067448+00:00",
       "mode": "backend",
       "stages": {
         "test": {
-          "passed": true,
-          "timestamp": "2026-02-19T13:32:53.943526+00:00",
+          "passed": false,
+          "timestamp": "2026-02-19T23:16:58.067448+00:00",
           "simulated": false
         }
       },
       "duration": 0,
-      "status": "passed",
-      "end_time": "2026-02-19T13:32:53.943526+00:00"
+      "status": "failed",
+      "end_time": "2026-02-19T23:16:58.067448+00:00"
+    },
+    {
+      "iteration": 4,
+      "start_time": "2026-02-19T23:17:11.224852+00:00",
+      "mode": "backend",
+      "stages": {
+        "test": {
+          "passed": false,
+          "timestamp": "2026-02-19T23:17:11.224852+00:00",
+          "simulated": false
+        }
+      },
+      "duration": 0,
+      "status": "failed",
+      "end_time": "2026-02-19T23:17:11.224852+00:00"
+    },
+    {
+      "iteration": 5,
+      "start_time": "2026-02-19T23:17:25.406888+00:00",
+      "mode": "backend",
+      "stages": {
+        "test": {
+          "passed": false,
+          "timestamp": "2026-02-19T23:17:25.406888+00:00",
+          "simulated": false
+        }
+      },
+      "duration": 0,
+      "status": "failed",
+      "end_time": "2026-02-19T23:17:25.406888+00:00"
     }
   ]
 }

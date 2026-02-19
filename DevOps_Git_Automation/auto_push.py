@@ -87,6 +87,8 @@ def create_commit(message=None):
     if not message:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         message = f"[AI-AGENT] Automated Update: DevOps data - {timestamp}"
+    elif not message.startswith("[AI-AGENT]"):
+        message = f"[AI-AGENT] {message}"
     
     result = run_command(
         ["git", "commit", "-m", message],

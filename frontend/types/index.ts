@@ -45,6 +45,8 @@ export interface AgentResults {
   total_fixes: number;
   total_commits: number;
   final_status: 'PASSED' | 'FAILED';
+  stop_reason?: string;
+  error_message?: string;
   score: ScoreBreakdown;
   fixes: Fix[];
   cicd_runs: CICDRun[];

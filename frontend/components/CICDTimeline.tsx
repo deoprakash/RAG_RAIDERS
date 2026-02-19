@@ -11,6 +11,7 @@ interface CICDTimelineProps {
 
 export default function CICDTimeline({ runs }: CICDTimelineProps) {
   const maxRetries = 5;
+  const hasRuns = runs.length > 0;
   const finalRun = runs[runs.length - 1];
   const allPassed = finalRun?.status === 'PASSED';
 
@@ -45,7 +46,7 @@ export default function CICDTimeline({ runs }: CICDTimelineProps) {
 
       {/* Timeline */}
       <div className="space-y-0">
-        {runs.map((run, index) => (
+        {hasRuns ? runs.map((run, index) => (
           <div key={index} className="relative">
             {/* Node */}
             <div className="flex items-start gap-4">
@@ -107,7 +108,11 @@ export default function CICDTimeline({ runs }: CICDTimelineProps) {
               </motion.div>
             </div>
           </div>
-        ))}
+        )) : (
+          <div className="bg-[#0A0E1A] border border-[#1E2D45] rounded-xl p-4 text-center">
+            <p className="text-[#9CA3AF] text-sm">No CI/CD iterations recorded for this run.</p>
+          </div>
+        )}
       </div>
 
       {/* Bottom Outcome Banner */}
@@ -117,7 +122,13 @@ export default function CICDTimeline({ runs }: CICDTimelineProps) {
         transition={{ delay: runs.length * 0.2 + 0.5 }}
         className="mt-4"
       >
-        {allPassed ? (
+        {!hasRuns ? (
+          <div className="bg-[#1A2235]/60 border border-[#1E2D45] rounded-xl p-4 text-center">
+            <p className="text-[#9CA3AF] font-semibold">
+              ℹ️ Timeline will appear after CI/CD iterations are detected
+            </p>
+          </div>
+        ) : allPassed ? (
           <div className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl p-4 text-center">
             <p className="text-[#10B981] font-bold">
               🎉 ALL TESTS PASSED in {runs.length} iteration(s)

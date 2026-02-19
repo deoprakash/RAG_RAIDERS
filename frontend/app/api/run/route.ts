@@ -40,6 +40,8 @@ type BackendRunResult = {
   fixes_applied?: number;
   total_commits?: number;
   final_status?: string;
+  stop_reason?: string;
+  error_message?: string;
   score?: BackendScore;
   fixes?: BackendFix[];
   cicd_runs?: BackendTimeline[];
@@ -114,6 +116,8 @@ function normalizeResults(raw: BackendRunResult): AgentResults {
     total_fixes: totalFixes,
     total_commits: raw.total_commits ?? totalFixes,
     final_status: finalStatus,
+    stop_reason: raw.stop_reason,
+    error_message: raw.error_message,
     score: {
       base: score.base ?? 100,
       speed_bonus: score.speed_bonus ?? 0,

@@ -27,9 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class BranchManager:
-    """Manages Git branches with DEO_PRAKASH_AI_Fix naming convention"""
-    
-    BRANCH_PREFIX = "DEO_PRAKASH_AI"
+    """Manages Git branches with TEAM_NAME_LEADER_NAME_AI_Fix naming convention"""
     
     def __init__(self, repo_path=None):
         """
@@ -60,32 +58,25 @@ class BranchManager:
         
         self.branch_history = []
     
-    def generate_branch_name(self, issue_type, issue_id=None, description=None):
+    def _sanitize_name(self, value):
+        clean = ''.join(c if c.isalnum() else '_' for c in str(value).strip())
+        clean = '_'.join(part for part in clean.split('_') if part)
+        return clean or 'TEAM'
+
+    def generate_branch_name(self, team_name, leader_name):
         """
         Generate branch name following TEAM_LEADER_AI_Fix convention
         
         Args:
-            issue_type (str): Type of fix (bug, feature, hotfix, etc.)
-            issue_id (str, optional): Issue/ticket ID
-            description (str, optional): Brief description
+            team_name (str): Team name
+            leader_name (str): Team leader name
             
         Returns:
             str: Formatted branch name
         """
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        parts = [self.BRANCH_PREFIX, issue_type, timestamp]
-        
-        if issue_id:
-            parts.append(f"issue_{issue_id}")
-        
-        if description:
-            # Sanitize description for branch name
-            clean_desc = description.lower().replace(' ', '_')
-            clean_desc = ''.join(c for c in clean_desc if c.isalnum() or c == '_')
-            parts.append(clean_desc[:30])  # Limit length
-        
-        branch_name = "/".join(parts)
+        safe_team = self._sanitize_name(team_name)
+        safe_leader = self._sanitize_name(leader_name)
+        branch_name = f"{safe_team}_{safe_leader}_AI_Fix"
         logger.info(f"Generated branch name: {branch_name}")
         return branch_name
     
@@ -141,19 +132,18 @@ class BranchManager:
             logger.error(f"✗ Unexpected error: {e}")
             return False
     
-    def create_ai_fix_branch(self, issue_type="fix", issue_id=None, description=None):
+    def create_ai_fix_branch(self, team_name, leader_name):
         """
         Create a branch using the TEAM_LEADER_AI_Fix naming convention
         
         Args:
-            issue_type (str): Type of fix
-            issue_id (str, optional): Issue ID
-            description (str, optional): Description
+            team_name (str): Team name
+            leader_name (str): Team leader name
             
         Returns:
             str: Branch name if successful, None otherwise
         """
-        branch_name = self.generate_branch_name(issue_type, issue_id, description)
+        branch_name = self.generate_branch_name(team_name, leader_name)
         
         if self.create_branch(branch_name):
             return branch_name
@@ -220,16 +210,16 @@ class BranchManager:
             logger.error(f"Failed to get current branch: {e}")
             return None
     
-    def create_branch_entry(self, issue_type, issue_id=None, description=None):
+    def create_branch_entry(self, team_name, leader_name):
         """Create and save a branch entry"""
-        branch_name = self.generate_branch_name(issue_type, issue_id, description)
+        branch_name = self.generate_branch_name(team_name, leader_name)
         
         branch_entry = {
             "branch_name": branch_name,
-            "type": issue_type,
+            "type": "fix",
             "timestamp": datetime.now().isoformat(),
-            "issue_id": issue_id or "N/A",
-            "description": description or "N/A",
+            "issue_id": "N/A",
+            "description": f"Auto branch for {team_name}/{leader_name}",
             "created_by": "DevOps_Lead",
             "status": "created"
         }
@@ -279,15 +269,13 @@ def main():
     
     # Generate example branch names
     examples = [
-        ("bug", "123", "fix_login_issue"),
-        ("feature", "456", "add_dashboard"),
-        ("hotfix", "789", "critical_security_patch"),
-        ("fix", None, "improve_performance")
+        ("RIFT ORGANISERS", "Saiyam Kumar"),
+        ("RAG RAIDERS", "Deo Prakash"),
     ]
     
     logger.info("\n=== Example Branch Names ===")
-    for issue_type, issue_id, description in examples:
-        branch_name = manager.generate_branch_name(issue_type, issue_id, description)
+    for team_name, leader_name in examples:
+        branch_name = manager.generate_branch_name(team_name, leader_name)
         logger.info(f"  {branch_name}")
     
     # Save history

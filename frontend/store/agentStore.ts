@@ -38,7 +38,11 @@ export const useAgentStore = create<AgentStore>((set) => ({
   setResults: (results) =>
     set({ results, isRunning: false, status: 'complete' }),
   setElapsed: (elapsed) => set({ elapsed }),
-  setStatus: (status) => set({ status }),
+  setStatus: (status) =>
+    set({
+      status,
+      isRunning: status === 'running',
+    }),
   reset: () =>
     set({ results: null, status: 'idle', logs: [], elapsed: 0, isRunning: false }),
 }));

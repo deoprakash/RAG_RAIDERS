@@ -134,6 +134,9 @@ class GitAutomation:
                 logger.warning("No changes to commit")
                 return None
             
+            if not message.startswith("[AI-AGENT]"):
+                message = f"[AI-AGENT] {message}"
+
             logger.info(f"Committing changes: {message[:50]}...")
             
             # Set author if provided
@@ -281,13 +284,13 @@ class GitAutomation:
             logger.error(f"✗ Pull failed: {e}")
             return False
     
-    def create_ai_branch_and_commit(self, issue_type, description, commit_message):
+    def create_ai_branch_and_commit(self, team_name, leader_name, commit_message):
         """
         Create TEAM_LEADER_AI_Fix branch, commit, and push
         
         Args:
-            issue_type (str): Type of issue (bug, feature, etc.)
-            description (str): Branch description
+            team_name (str): Team name
+            leader_name (str): Team leader name
             commit_message (str): Commit message
             
         Returns:
@@ -297,8 +300,8 @@ class GitAutomation:
         
         # Create branch
         branch_name = self.branch_manager.create_ai_fix_branch(
-            issue_type=issue_type,
-            description=description
+            team_name=team_name,
+            leader_name=leader_name,
         )
         
         if not branch_name:

@@ -106,6 +106,15 @@ export default function RunSummaryCard({ results }: RunSummaryCardProps) {
               ⏱ {formatDuration(results.duration_seconds)}
             </p>
           </div>
+
+          {results.final_status === 'FAILED' && (results.stop_reason || results.error_message) && (
+            <div>
+              <span className="text-xs text-[#6B7280] uppercase tracking-wider">Stop Reason</span>
+              <p className="font-semibold text-[#EF4444] mt-1 wrap-break-word">
+                {results.error_message || results.stop_reason}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Right column - Stats */}

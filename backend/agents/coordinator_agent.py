@@ -65,10 +65,13 @@ class CoordinatorAgent:
         max_retry: int = 5,
     ) -> dict[str, Any]:
         start = time.monotonic()
+        self.ci_monitor.timeline.clear()
         fixes: list[dict[str, Any]] = []
         total_failures = 0
         commit_count = 0
         final_status = "FAILED"
+        stop_reason = "unknown"
+        error_message = ""
 
         branch_name = self._build_branch_name(team_name, leader_name)
 
@@ -81,43 +84,54 @@ class CoordinatorAgent:
             git_agent = GitAgent(analysis.repo_path)
             git_agent.create_branch(branch_name)
 
+            consecutive_unparseable = 0
+
             for iteration in range(1, max_retry + 1):
                 run_result = self.test_runner.run(
                     analysis.repo_path, analysis.discovered_tests
                 )
 
                 run_status = "PASSED" if run_result.passed else "FAILED"
-                self.ci_monitor.record(iteration=iteration, status=run_status)
+                parsed_failures = []
+                if not run_result.passed:
+                    parsed_failures = self.error_parser.parse(
+                        run_result.output, analysis.repo_path
+                    )
 
-                # ✅ CI passed immediately
+                self.ci_monitor.record(
+                    iteration=iteration,
+                    status=run_status,
+                    failures_remaining=len(parsed_failures),
+                )
+
+                # ✅ CI passed — stop immediately
                 if run_result.passed:
                     final_status = "PASSED"
+                    stop_reason = "tests_passed"
                     break
 
-                parsed_failures = self.error_parser.parse(
-                    run_result.output, analysis.repo_path
-                )
+                total_failures += len(parsed_failures)
 
-                # Count only actionable failures (exclude LOGIC)
-                total_failures += sum(
-                    1 for f in parsed_failures if f.bug_type != "LOGIC"
-                )
-
-                # ✅ No actionable failures remain → PASS
                 if not parsed_failures:
-                    self.logger.info(
-                        "No actionable failures remaining; marking CI as PASSED"
+                    consecutive_unparseable += 1
+                    self.logger.warning(
+                        "Test run failed but no parseable failures were found in iteration %s "
+                        "(consecutive: %s)",
+                        iteration,
+                        consecutive_unparseable,
                     )
-                    final_status = "PASSED"
-                    break
-
-                # ✅ Only LOGIC failures remain → stop retries and PASS
-                if all(f.bug_type == "LOGIC" for f in parsed_failures):
-                    self.logger.info(
-                        "Only LOGIC failures remain; stopping retries and marking PASSED"
-                    )
-                    final_status = "PASSED"
-                    break
+                    # After 2 consecutive unparseable failures there is nothing
+                    # the agent can fix — bail out immediately instead of
+                    # burning through all remaining retries.
+                    if consecutive_unparseable >= 2:
+                        self.logger.warning(
+                            "Stopping retries: 2 consecutive unparseable failures."
+                        )
+                        stop_reason = "unparseable_failures"
+                        break
+                    continue
+                else:
+                    consecutive_unparseable = 0  # reset when we find actionable failures
 
                 for failure in parsed_failures:
                     fix = self.fix_agent.apply_fix(analysis.repo_path, failure)
@@ -148,19 +162,14 @@ class CoordinatorAgent:
             if commit_count > 0:
                 git_agent.push_branch(branch_name)
 
+            if final_status != "PASSED":
+                stop_reason = "max_retry_exhausted"
+
         except Exception as exc:
             self.logger.exception("Coordinator run failed: %s", exc)
             final_status = "FAILED"
-
-        # 🔹 Ensure timeline ends cleanly with PASSED if applicable
-        if final_status == "PASSED" and (
-            not self.ci_monitor.timeline
-            or self.ci_monitor.timeline[-1]["status"] != "PASSED"
-        ):
-            self.ci_monitor.record(
-                iteration=len(self.ci_monitor.timeline) + 1,
-                status="PASSED",
-            )
+            stop_reason = "runtime_error"
+            error_message = str(exc)
 
         elapsed = time.monotonic() - start
         score = calculate_score(
@@ -175,6 +184,8 @@ class CoordinatorAgent:
             "total_failures": total_failures,
             "fixes_applied": sum(1 for f in fixes if f["status"] == "Fixed"),
             "final_status": final_status,
+            "stop_reason": stop_reason,
+            "error_message": error_message,
             "time_taken_seconds": round(elapsed, 3),
             "score": {
                 "base": score.base,
@@ -205,8 +216,8 @@ class CoordinatorAgent:
         return result
 
     def _build_branch_name(self, team_name: str, leader_name: str) -> str:
-        safe_team = re.sub(r"[^A-Za-z0-9]+", "_", team_name.strip()).strip("_")
-        safe_leader = re.sub(r"[^A-Za-z0-9]+", "_", leader_name.strip()).strip("_")
+        safe_team = re.sub(r"[^A-Za-z0-9]+", "_", team_name.strip()).strip("_").upper()
+        safe_leader = re.sub(r"[^A-Za-z0-9]+", "_", leader_name.strip()).strip("_").upper()
         return f"{safe_team}_{safe_leader}_AI_Fix"
 
     def _build_workspace_name(self, team_name: str, leader_name: str) -> str:
