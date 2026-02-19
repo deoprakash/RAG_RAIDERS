@@ -4,7 +4,6 @@
 
 A production-grade, fully-featured frontend dashboard for the RIFT 2026 Hackathon submission: **Autonomous CI/CD Healing Agent**.
 
-![Demo Mode Enabled by Default](https://img.shields.io/badge/Demo%20Mode-Enabled-yellow)
 ![Next.js 16](https://img.shields.io/badge/Next.js-16-black)
 ![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38bdf8)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
@@ -14,7 +13,6 @@ A production-grade, fully-featured frontend dashboard for the RIFT 2026 Hackatho
 ## ✨ Features
 
 ### 🎯 Core Functionality
-- **Demo Mode (Default ON)**: Judges can instantly see the fully working dashboard with mock data
 - **Real-time Log Streaming**: Terminal-style log viewer with auto-scroll
 - **Live Metrics**: Animated counters, progress bars, and timers
 - **Interactive UI**: Smooth animations, hover effects, and responsive design
@@ -68,32 +66,6 @@ npm start
 
 ---
 
-## 🎭 Demo Mode
-
-**Demo Mode is enabled by default** so judges can immediately see the working dashboard:
-
-1. Form is **pre-filled** with sample data:
-   - Repo: `https://github.com/rift2026/sample-broken-repo`
-   - Team: `RIFT ORGANISERS`
-   - Leader: `Saiyam Kumar`
-
-2. Click **🚀 Run Agent** button
-
-3. Loading overlay appears with **19 streaming log lines** (850ms apart)
-
-4. After ~18 seconds, **results dashboard** appears with:
-   - ✅ **Confetti animation** on PASSED status
-   - 📈 **Animated count-up** for metrics
-   - 🎨 **Full CI/CD timeline** with 2 iterations
-   - 📊 **Score breakdown** (110 pts)
-   - 📋 **Fixes table** with 6 fixes
-
-5. **100% offline** — no backend required!
-
-To toggle Demo Mode OFF, use the switch in the input section.
-
----
-
 ## 📁 Project Structure
 
 ```
@@ -105,24 +77,25 @@ frontend/
 ├── components/
 │   ├── Navbar.tsx          # Top navigation with live clock
 │   ├── StatusBadge.tsx     # Reusable status indicator
-│   ├── InputSection.tsx    # Form with demo toggle
+│   ├── InputSection.tsx    # Agent run form
 │   ├── LoadingOverlay.tsx  # Terminal-style log viewer
 │   ├── RunSummaryCard.tsx  # Key metrics summary
 │   ├── ScoreBreakdownPanel.tsx  # Score visualization
 │   ├── CICDTimeline.tsx    # Pipeline timeline
 │   ├── FixesTable.tsx      # Detailed fixes table
 │   └── Dashboard.tsx       # Main results container
+├── app/api/run/
+│   └── route.ts            # Backend bridge + response normalization
 ├── store/
 │   └── agentStore.ts       # Zustand global state
 ├── hooks/
 │   └── useAgentRun.ts      # Agent execution logic
 ├── utils/
-│   ├── formatters.ts       # Utility functions
-│   └── mockData.ts         # Mock data for demo mode
+│   └── formatters.ts       # Utility functions
 ├── types/
 │   └── index.ts            # TypeScript interfaces
 ├── tailwind.config.ts      # Tailwind CSS config
-├── next.config.ts          # Next.js config with API rewrites
+├── next.config.ts          # Next.js config
 └── .env.local.example      # Environment variables template
 ```
 
@@ -140,18 +113,12 @@ AGENT_BACKEND_URL=https://your-backend.up.railway.app
 
 ### API Endpoints Expected
 
-The frontend expects these backend endpoints when Demo Mode is OFF:
+The frontend `app/api/run/route.ts` calls these backend endpoints:
 
 ```
-POST /api/run
-→ Body: { repoUrl, teamName, leaderName }
-→ Returns: { run_id: string }
-
-GET /api/run/:runId/status
-→ Returns: { log?: LogLine, final_status?: 'PASSED'|'FAILED' }
-
-GET /api/run/:runId/results
-→ Returns: AgentResults
+POST /run-agent
+→ Body: { repo_url, team_name, leader_name }
+→ Returns: run result payload (normalized to AgentResults by frontend API route)
 ```
 
 See `types/index.ts` for full TypeScript interfaces.
@@ -171,10 +138,6 @@ Edit colors in `app/globals.css`:
 --success:        #10B981
 --error:          #EF4444
 ```
-
-### Mock Data
-
-Edit `utils/mockData.ts` to customize demo results.
 
 ### Animation Speeds
 
@@ -251,8 +214,8 @@ MIT License — RIFT 2026 Hackathon Submission
 | **Innovation** | Real-time log streaming + AI-powered healing |
 | **Technical Excellence** | TypeScript, animations, state management |
 | **UI/UX** | Dark theme, smooth animations, responsive |
-| **Completeness** | Full demo mode, CSV export, error handling |
-| **Production-Ready** | Error boundaries, loading states, offline support |
+| **Completeness** | Backend integration, CSV export, error handling |
+| **Production-Ready** | API bridge, loading states, deploy-ready configuration |
 
 ---
 
@@ -263,7 +226,6 @@ MIT License — RIFT 2026 Hackathon Submission
 - **Framer Motion** for declarative animations
 - **Canvas Confetti** for celebration effects
 - **Recharts** for data visualization
-- **Mock data** streams at 850ms intervals for realism
 
 ---
 

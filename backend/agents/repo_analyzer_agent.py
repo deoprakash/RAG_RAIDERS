@@ -1,6 +1,7 @@
 # backend>agents>repo_analyzer_agent.py
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -32,7 +33,33 @@ class RepoAnalyzerAgent:
                 shutil.rmtree(repo_path, ignore_errors=True)
             
 
-        subprocess.run(["git", "clone", repo_url, str(repo_path)], check=True)
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        env["GIT_SSH_COMMAND"] = "ssh -o BatchMode=yes"
+        env["GIT_CONFIG_GLOBAL"] = "/dev/null"
+        env["GIT_CONFIG_NOSYSTEM"] = "1"
+
+        try:
+            subprocess.run(
+                ["git", "clone", repo_url, str(repo_path)],
+                check=True,
+                timeout=120,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                "Git clone timed out after 120 seconds. "
+                "Use an accessible repository URL and verify network/auth access."
+            ) from exc
+        except subprocess.CalledProcessError as exc:
+            error_message = (exc.stderr or exc.stdout or "git clone failed").strip()
+            raise RuntimeError(
+                f"Git clone failed: {error_message}. "
+                "If this is a private/SSH repo, use an HTTPS repo URL with access permissions."
+            ) from exc
+
         discovered_tests = self._discover_tests(repo_path)
         return RepoAnalysis(repo_path=repo_path, discovered_tests=discovered_tests)
 

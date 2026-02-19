@@ -12,8 +12,15 @@ try:
     from .git_agent import GitAgent
     from .repo_analyzer_agent import RepoAnalyzerAgent
     from .test_runner_agent import TestRunnerAgent
-    from ..config import RESULTS_PATH, WORKSPACES_DIR
+    from ..config import (
+        DEVOPS_BRANCH_HISTORY_PATH,
+        DEVOPS_CI_TIMELINE_PATH,
+        DEVOPS_DATA_DIR,
+        RESULTS_PATH,
+        WORKSPACES_DIR,
+    )
     from ..scoring import calculate_score
+    from ..utils.devops_bridge import DevOpsAutomationBridge
     from ..utils.logger import ensure_parent_dir, get_logger
 except ImportError:
     from agents.ci_monitor_agent import CIMonitorAgent  # type: ignore
@@ -22,8 +29,15 @@ except ImportError:
     from agents.git_agent import GitAgent  # type: ignore
     from agents.repo_analyzer_agent import RepoAnalyzerAgent  # type: ignore
     from agents.test_runner_agent import TestRunnerAgent  # type: ignore
-    from config import RESULTS_PATH, WORKSPACES_DIR  # type: ignore
+    from config import (  # type: ignore
+        DEVOPS_BRANCH_HISTORY_PATH,
+        DEVOPS_CI_TIMELINE_PATH,
+        DEVOPS_DATA_DIR,
+        RESULTS_PATH,
+        WORKSPACES_DIR,
+    )
     from scoring import calculate_score  # type: ignore
+    from utils.devops_bridge import DevOpsAutomationBridge  # type: ignore
     from utils.logger import ensure_parent_dir, get_logger  # type: ignore
 
 
@@ -35,6 +49,13 @@ class CoordinatorAgent:
         self.error_parser = ErrorParserAgent()
         self.fix_agent = FixAgent()
         self.ci_monitor = CIMonitorAgent()
+        self.devops_bridge = None
+
+        if DEVOPS_DATA_DIR.exists():
+            self.devops_bridge = DevOpsAutomationBridge(
+                branch_history_path=DEVOPS_BRANCH_HISTORY_PATH,
+                ci_timeline_path=DEVOPS_CI_TIMELINE_PATH,
+            )
 
     def run(
         self,
@@ -167,6 +188,20 @@ class CoordinatorAgent:
 
         ensure_parent_dir(RESULTS_PATH)
         RESULTS_PATH.write_text(json.dumps(result, indent=2), encoding="utf-8")
+
+        if self.devops_bridge is not None:
+            try:
+                self.devops_bridge.sync_run_data(
+                    branch_name=branch_name,
+                    team_name=team_name,
+                    leader_name=leader_name,
+                    ci_timeline=self.ci_monitor.timeline,
+                )
+            except Exception as exc:  # noqa: BLE001
+                self.logger.exception(
+                    "Failed to sync DevOps_Git_Automation data: %s", exc
+                )
+
         return result
 
     def _build_branch_name(self, team_name: str, leader_name: str) -> str:

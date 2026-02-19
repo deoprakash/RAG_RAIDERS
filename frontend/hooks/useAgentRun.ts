@@ -2,7 +2,13 @@
 import { useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAgentStore } from '@/store/agentStore';
-import { mockResults, mockLogs } from '@/utils/mockData';
+
+function getLogTime() {
+  const now = new Date();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${minutes}:${seconds}`;
+}
 
 export function useAgentRun() {
   const store = useAgentStore();
@@ -19,48 +25,25 @@ export function useAgentRun() {
       store.setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
     }, 1000);
 
-    // ── DEMO MODE ──────────────────────────────────────────
-    if (store.demoMode) {
-      for (const log of mockLogs) {
-        await new Promise((r) => setTimeout(r, 850));
-        store.appendLog(log);
-      }
-      await new Promise((r) => setTimeout(r, 500));
-      if (timerRef.current) clearInterval(timerRef.current);
-      store.setResults(mockResults);
-      return;
-    }
-
-    // ── REAL MODE ───────────────────────────────────────────
     try {
-      const { data } = await axios.post('/api/run', {
+      store.appendLog({ time: getLogTime(), message: '🚀 Starting agent run...' });
+      store.appendLog({ time: getLogTime(), message: '🔗 Connecting to backend...' });
+
+      const { data: results } = await axios.post('/api/run', {
         repoUrl: store.repoUrl,
         teamName: store.teamName,
         leaderName: store.leaderName,
       });
-      const runId: string = data.run_id;
 
-      const poll = setInterval(async () => {
-        try {
-          const { data: statusData } = await axios.get(`/api/run/${runId}/status`);
-          if (statusData.log) store.appendLog(statusData.log);
+      store.appendLog({
+        time: getLogTime(),
+        message: `✅ Agent run finished with status: ${results.final_status}`,
+      });
 
-          if (
-            statusData.final_status === 'PASSED' ||
-            statusData.final_status === 'FAILED'
-          ) {
-            clearInterval(poll);
-            if (timerRef.current) clearInterval(timerRef.current);
-            const { data: results } = await axios.get(`/api/run/${runId}/results`);
-            store.setResults(results);
-          }
-        } catch {
-          clearInterval(poll);
-          if (timerRef.current) clearInterval(timerRef.current);
-          store.setStatus('error');
-        }
-      }, 2000);
+      if (timerRef.current) clearInterval(timerRef.current);
+      store.setResults(results);
     } catch {
+      store.appendLog({ time: getLogTime(), message: '❌ Backend request failed' });
       if (timerRef.current) clearInterval(timerRef.current);
       store.setStatus('error');
     }

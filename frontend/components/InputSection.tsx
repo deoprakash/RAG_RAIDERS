@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Github, Users, User, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAgentStore } from '@/store/agentStore';
@@ -7,16 +7,8 @@ import { useAgentRun } from '@/hooks/useAgentRun';
 import { toBranchName } from '@/utils/formatters';
 
 export default function InputSection() {
-  const { repoUrl, teamName, leaderName, isRunning, demoMode, setField, toggleDemo } = useAgentStore();
+  const { repoUrl, teamName, leaderName, isRunning, setField } = useAgentStore();
   const { runAgent } = useAgentRun();
-
-  useEffect(() => {
-    if (demoMode) {
-      setField('repoUrl', 'https://github.com/rift2026/sample-broken-repo');
-      setField('teamName', 'RIFT ORGANISERS');
-      setField('leaderName', 'Saiyam Kumar');
-    }
-  }, [demoMode, setField]);
 
   const branchPreview = useMemo(() => {
     if (teamName && leaderName) {
@@ -45,32 +37,6 @@ export default function InputSection() {
       </div>
 
       <div className="max-w-2xl mx-auto bg-[#111827] border border-[#1E2D45] rounded-2xl p-8 relative z-10">
-        {/* Demo Mode Toggle */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <span className="text-sm text-[#9CA3AF]">🎭 Demo Mode</span>
-              <div
-                onClick={toggleDemo}
-                className={`w-12 h-6 rounded-full transition-all duration-200 ${
-                  demoMode ? 'bg-[#3B82F6]' : 'bg-[#1E2D45]'
-                }`}
-              >
-                <div
-                  className={`w-5 h-5 rounded-full bg-white shadow-md transform transition-transform duration-200 mt-0.5 ${
-                    demoMode ? 'translate-x-6' : 'translate-x-0.5'
-                  }`}
-                />
-              </div>
-            </label>
-            {demoMode && (
-              <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded-full text-xs font-semibold">
-                DEMO
-              </span>
-            )}
-          </div>
-        </div>
-
         {/* Heading */}
         <h1 className="text-3xl font-bold gradient-text text-center mb-2">
           Autonomous CI/CD Healing Agent

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,7 +21,7 @@ class TestRunResult:
 
 class TestRunnerAgent:
     def run(self, repo_path: Path, tests: list[str]) -> TestRunResult:
-        cmd = ["pytest", "-q"]
+        cmd = [sys.executable, "-m", "pytest", "-q"]
         if tests:
             cmd.extend(tests)
 

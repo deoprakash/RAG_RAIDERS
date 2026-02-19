@@ -1,12 +1,12 @@
 {
-  "repo_url": "https://github.com/AryaSingh-25/long-test-repo-.git",
-  "team_name": "CODE WARRIORS",
-  "leader_name": "ARYA SINGH",
-  "branch_name": "CODE_WARRIORS_ARYA_SINGH_AI_Fix",
+  "repo_url": "https://github.com/AryaSingh-25/long-test-repo-",
+  "team_name": "ALPHA",
+  "leader_name": "shubham dubey",
+  "branch_name": "ALPHA_shubham_dubey_AI_Fix",
   "total_failures": 0,
   "fixes_applied": 0,
   "final_status": "PASSED",
-  "time_taken_seconds": 3.703,
+  "time_taken_seconds": 4.286,
   "score": {
     "base": 100,
     "speed_bonus": 10,
@@ -18,22 +18,22 @@
     {
       "iteration": 1,
       "status": "FAILED",
-      "timestamp": "2026-02-19T11:10:06.845925+00:00"
+      "timestamp": "2026-02-19T13:32:31.631206+00:00"
     },
     {
       "iteration": 2,
       "status": "PASSED",
-      "timestamp": "2026-02-19T11:10:06.847866+00:00"
+      "timestamp": "2026-02-19T13:32:31.633205+00:00"
     },
     {
       "iteration": 1,
       "status": "FAILED",
-      "timestamp": "2026-02-19T11:11:45.373168+00:00"
+      "timestamp": "2026-02-19T13:32:53.941756+00:00"
     },
     {
       "iteration": 4,
       "status": "PASSED",
-      "timestamp": "2026-02-19T11:11:45.373168+00:00"
+      "timestamp": "2026-02-19T13:32:53.943526+00:00"
     }
   ]
 }

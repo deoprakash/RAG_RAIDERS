@@ -11,7 +11,6 @@ interface AgentStore {
   elapsed: number;
   results: AgentResults | null;
   status: RunStatus;
-  demoMode: boolean;
 
   setField: (field: 'repoUrl' | 'teamName' | 'leaderName', value: string) => void;
   startRun: () => void;
@@ -19,7 +18,6 @@ interface AgentStore {
   setResults: (results: AgentResults) => void;
   setElapsed: (s: number) => void;
   setStatus: (s: RunStatus) => void;
-  toggleDemo: () => void;
   reset: () => void;
 }
 
@@ -32,7 +30,6 @@ export const useAgentStore = create<AgentStore>((set) => ({
   elapsed: 0,
   results: null,
   status: 'idle',
-  demoMode: true, // DEFAULT TRUE so judges can see it immediately
 
   setField: (field, value) => set((s) => ({ ...s, [field]: value })),
   startRun: () =>
@@ -42,7 +39,6 @@ export const useAgentStore = create<AgentStore>((set) => ({
     set({ results, isRunning: false, status: 'complete' }),
   setElapsed: (elapsed) => set({ elapsed }),
   setStatus: (status) => set({ status }),
-  toggleDemo: () => set((s) => ({ demoMode: !s.demoMode })),
   reset: () =>
     set({ results: null, status: 'idle', logs: [], elapsed: 0, isRunning: false }),
 }));
