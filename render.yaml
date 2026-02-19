@@ -1,0 +1,24 @@
+services:
+  # ── Backend (FastAPI) ──────────────────────────────────────────────────────
+  - type: web
+    name: hackathon-backend
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /health
+
+  # ── Frontend (Next.js) ────────────────────────────────────────────────────
+  - type: web
+    name: hackathon-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: AGENT_BACKEND_URL          # Set this to the backend's Render URL
+        sync: false                     # Fill in manually on Render dashboard
