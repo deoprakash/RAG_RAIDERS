@@ -1,0 +1,33 @@
+services:
+  ci-pipeline:
+    build: .
+    container_name: rift26-ci-pipeline
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./tests:/app/tests
+    environment:
+      - CI_ENVIRONMENT=docker
+      - PYTHONUNBUFFERED=1
+    command: python ci_cd/pipeline/ci_runner.py
+    
+  pytest-runner:
+    build: .
+    container_name: rift26-pytest
+    volumes:
+      - ./tests:/app/tests
+      - ./logs:/app/logs
+    environment:
+      - PYTEST_ENVIRONMENT=docker
+    command: pytest tests/ -v --color=yes
+    
+  git-automation:
+    build: .
+    container_name: rift26-git-automation
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ~/.gitconfig:/root/.gitconfig:ro
+    environment:
+      - GIT_AUTOMATION=true
+    command: python scripts/git_automation.py
